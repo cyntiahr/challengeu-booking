@@ -1,0 +1,1 @@
+console.log("ChallengeU backend is starting...");
