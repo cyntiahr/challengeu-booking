@@ -1,1 +1,9 @@
-console.log("ChallengeU backend is starting...");
+
+import "dotenv/config";
+import app from "./app.js";
+
+const PORT = Number(process.env.PORT) || 3000;
+
+app.listen(PORT, () => {
+  console.log(`ChallengeU API running on port ${PORT}`);
+});
