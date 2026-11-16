@@ -53,10 +53,3 @@ CREATE INDEX "Session_studentId_status_idx" ON "Session"("studentId", "status");
 
 -- CreateIndex
 CREATE INDEX "Notification_userId_isRead_idx" ON "Notification"("userId", "isRead");
-
--- Prevent multiple active bookings for the same availability block.
--- Cancelled sessions are excluded so the slot can be booked again.
-
-CREATE UNIQUE INDEX "unique_active_booking"
-ON "Session"("availabilityBlockId")
-WHERE "status" = 'BOOKED';
