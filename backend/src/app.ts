@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import authRoutes from './modules/auth/auth.routes.js';
 import availabilityRoutes from './modules/scheduling/availability.routes.js';
-import cancellationRoutes from './modules/scheduling/cancellation.routes.js';
+import sessionRoutes from "./modules/scheduling/session.routes.js";
 import { errorHandler } from './shared/middleware/error.middleware.js';
 
 const app = express();
@@ -14,7 +14,7 @@ app.use('/auth', authRoutes);
 
 app.use('/availability', availabilityRoutes);
 
-app.use('/sessions', cancellationRoutes);
+app.use("/sessions", sessionRoutes);
 
 app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
