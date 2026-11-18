@@ -1,4 +1,5 @@
 import { prisma } from '../../infrastructure/database.js';
+import { notificationProvider } from '../notifications/prisma-notification.provider.js';
 
 interface CancelBookingInput {
     studentId: string;
@@ -62,13 +63,11 @@ export async function cancelBooking(input: CancelBookingInput) {
         });
 
         // 6. Notify the student.
-        await tx.notification.create({
-            data: {
-                userId: input.studentId,
-                message:
-                    'Your coaching session has been cancelled successfully.',
-            },
-        });
+        await notificationProvider.notify(
+            tx,
+            input.studentId,
+            'Your coaching session has been cancelled successfully.',
+        );
 
         return cancelledSession;
     });

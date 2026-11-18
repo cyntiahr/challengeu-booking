@@ -1,5 +1,6 @@
 import { prisma } from '../../infrastructure/database.js';
 import { enrollmentProvider } from '../enrollment/prisma-enrollment.provider.js';
+import { notificationProvider } from '../notifications/prisma-notification.provider.js';
 
 interface CreateBookingInput {
     studentId: string;
@@ -7,16 +8,15 @@ interface CreateBookingInput {
 }
 
 export async function createBooking(input: CreateBookingInput) {
+    // 1.Check enrollment before opening the transaction
+    const studentStatus = await enrollmentProvider.getStudentStatus(
+        input.studentId,
+    );
+
+    if (studentStatus !== 'ACTIVE') {
+        throw new Error('Student is not active');
+    }
     return prisma.$transaction(async (tx) => {
-        // 1. Verify that the student exists and is active.
-        const studentStatus = await enrollmentProvider.getStudentStatus(
-            input.studentId,
-        );
-
-        if (studentStatus !== 'ACTIVE') {
-            throw new Error('Student is not active');
-        }
-
         // 2. Atomically claim the availability block.
         const claimedBlock = await tx.availabilityBlock.updateMany({
             where: {
@@ -62,12 +62,11 @@ export async function createBooking(input: CreateBookingInput) {
         });
 
         // 5. Create an in-app notification.
-        await tx.notification.create({
-            data: {
-                userId: input.studentId,
-                message: 'Your coaching session has been booked successfully.',
-            },
-        });
+        await notificationProvider.notify(
+            tx,
+            input.studentId,
+            'Your coaching session has been booked successfully.',
+        );
 
         return session;
     });
