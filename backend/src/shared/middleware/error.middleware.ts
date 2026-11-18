@@ -1,8 +1,9 @@
-import type { ErrorRequestHandler } from "express";
+ import type { ErrorRequestHandler } from "express";
 
 export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   const knownErrors: Record<string, number> = {
     "Session not found": 404,
+    "Student not found": 404,
     "Session is already cancelled": 409,
     "Sessions must be cancelled at least 24 hours in advance": 409,
     "Availability is no longer available": 409,

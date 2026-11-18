@@ -33,3 +33,25 @@ export async function createAvailability(
     },
   });
 }
+interface GetAvailabilityInput {
+  coachId: string;
+  startAt: Date;
+  endAt: Date;
+}
+
+export async function getAvailableBlocks(input: GetAvailabilityInput) {
+  return prisma.availabilityBlock.findMany({
+    where: {
+      coachId: input.coachId,
+      status: "OPEN",
+      startAt: {
+        gte: input.startAt,
+        lt: input.endAt,
+        gt: new Date(),
+      },
+    },
+    orderBy: {
+      startAt: "asc",
+    },
+  });
+}

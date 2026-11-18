@@ -4,6 +4,7 @@ import authRoutes from './modules/auth/auth.routes.js';
 import availabilityRoutes from './modules/scheduling/availability.routes.js';
 import sessionRoutes from "./modules/scheduling/session.routes.js";
 import { errorHandler } from './shared/middleware/error.middleware.js';
+import enrollmentRoutes from "./modules/enrollment/enrollment.routes.js";
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use("/sessions", sessionRoutes);
 app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
 });
+
+app.use("/enrollment", enrollmentRoutes);
 
 app.use(errorHandler);
 
