@@ -135,35 +135,60 @@ function App() {
     }
 
     return (
-        <main>
-            <h1>ChallengeU Booking</h1>
-            <h2>Login</h2>
+        <main className='login-page'>
+            <div className='login-card'>
+                <div className='login-brand'>
+                    <div className='login-icon' aria-hidden='true'>
+                        ✓
+                    </div>
 
-            <form onSubmit={handleLogin}>
-                <label>
-                    Email
-                    <input
-                        type='email'
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        required
-                    />
-                </label>
+                    <h1>ChallengeU Booking</h1>
+                    <p>Coaching & scheduling platform</p>
+                </div>
 
-                <label>
-                    Password
-                    <input
-                        type='password'
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        required
-                    />
-                </label>
+                <div className='login-intro'>
+                    <h2>Welcome back</h2>
+                    <p>Sign in to manage your coaching sessions.</p>
+                </div>
 
-                <button type='submit'>Login</button>
-            </form>
+                <form className='login-form' onSubmit={handleLogin}>
+                    <label>
+                        Email address
+                        <input
+                            type='email'
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            placeholder='you@example.com'
+                            autoComplete='email'
+                            required
+                        />
+                    </label>
 
-            {error && <p role='alert'>{error}</p>}
+                    <label>
+                        Password
+                        <input
+                            type='password'
+                            value={password}
+                            onChange={(event) =>
+                                setPassword(event.target.value)
+                            }
+                            placeholder='Enter your password'
+                            autoComplete='current-password'
+                            required
+                        />
+                    </label>
+
+                    <button type='submit' className='login-submit'>
+                        Sign in
+                    </button>
+                </form>
+
+                {error && (
+                    <p role='alert' className='error-message'>
+                        {error}
+                    </p>
+                )}
+            </div>
         </main>
     );
 }
