@@ -151,42 +151,54 @@ export default function StudentDashboard({ token, coachId, timeZone }: Props) {
     }, [loadNotifications]);
 
     return (
-        <div>
-            <section>
+        <main className='student-dashboard'>
+            <section className='dashboard-card'>
                 <h2>Available coaching sessions</h2>
-                <div>
+
+                <div className='week-navigation'>
                     <button
                         type='button'
+                        className='week-button'
                         onClick={() =>
                             setSelectedWeek((week) => subWeeks(week, 1))
                         }
                     >
-                        Previous week
+                        ← Previous
                     </button>
 
-                    <span>
-                        Week of{' '}
-                        {formatSessionDate(startAt, timeZone)
-                            .split(', ')
-                            .slice(0, 2)
-                            .join(', ')}
-                    </span>
+                    <div className='week-label'>
+                        <span>SELECTED WEEK</span>
+                        <strong>
+                            {formatSessionDate(startAt, timeZone)
+                                .split(', ')
+                                .slice(0, 2)
+                                .join(', ')}
+                        </strong>
+                    </div>
 
                     <button
                         type='button'
+                        className='week-button'
                         onClick={() =>
                             setSelectedWeek((week) => addWeeks(week, 1))
                         }
                     >
-                        Next week
+                        Next →
                     </button>
                 </div>
-                {blocks.length === 0 && <p>No available sessions found.</p>}
 
-                <ul>
+                {blocks.length === 0 && (
+                    <p className='empty-state'>
+                        No available sessions this week.
+                    </p>
+                )}
+
+                <ul className='session-list'>
                     {blocks.map((block) => (
-                        <li key={block.id}>
-                            {formatSessionDate(block.startAt, timeZone)}
+                        <li key={block.id} className='session-item'>
+                            <span>
+                                {formatSessionDate(block.startAt, timeZone)}
+                            </span>
 
                             <button
                                 type='button'
@@ -198,48 +210,29 @@ export default function StudentDashboard({ token, coachId, timeZone }: Props) {
                     ))}
                 </ul>
             </section>
-            <section>
+
+            <section className='dashboard-card'>
                 <h2>My upcoming sessions</h2>
-                {sessions.length === 0 && <p>No upcoming sessions.</p>}
-                {/* <div>
-                    <button
-                        type='button'
-                        onClick={() =>
-                            setSelectedWeek((week) => subWeeks(week, 1))
-                        }
-                    >
-                        Previous week
-                    </button>
 
-                    <span>
-                        Week of{' '}
-                        {formatSessionDate(startAt, timeZone)
-                            .split(', ')
-                            .slice(0, 2)
-                            .join(', ')}
-                    </span>
+                {sessions.length === 0 && (
+                    <p className='empty-state'>No upcoming sessions.</p>
+                )}
 
-                    <button
-                        type='button'
-                        onClick={() =>
-                            setSelectedWeek((week) => addWeeks(week, 1))
-                        }
-                    >
-                        Next week
-                    </button>
-                </div> */}
-                <ul>
+                <ul className='session-list'>
                     {sessions.map((session) => (
-                        <li key={session.id}>
-                            {formatSessionDate(
-                                session.availabilityBlock.startAt,
-                                timeZone,
-                            )}
-                            {' — '}
-                            {session.availabilityBlock.coach.name}
+                        <li key={session.id} className='session-item'>
+                            <span>
+                                {formatSessionDate(
+                                    session.availabilityBlock.startAt,
+                                    timeZone,
+                                )}
+                                {' — '}
+                                {session.availabilityBlock.coach.name}
+                            </span>
 
                             <button
                                 type='button'
+                                className='button-secondary'
                                 onClick={() =>
                                     void handleCancellation(session.id)
                                 }
@@ -250,22 +243,33 @@ export default function StudentDashboard({ token, coachId, timeZone }: Props) {
                     ))}
                 </ul>
             </section>
-            <section>
+
+            <section className='dashboard-card'>
                 <h2>Notifications</h2>
 
-                {notifications.length === 0 && <p>No notifications yet.</p>}
+                {notifications.length === 0 && (
+                    <p className='empty-state'>No notifications yet.</p>
+                )}
 
-                <ul>
+                <ul className='notification-list'>
                     {notifications.map((notification) => (
                         <li key={notification.id}>
-                            {notification.message}
-                            {' — '}
-                            {new Date(notification.createdAt).toLocaleString()}
+                            <p>{notification.message}</p>
+                            <small>
+                                {new Date(
+                                    notification.createdAt,
+                                ).toLocaleString()}
+                            </small>
                         </li>
                     ))}
                 </ul>
             </section>
-            {error && <p role='alert'>{error}</p>}
-        </div>
+
+            {error && (
+                <p role='alert' className='error-message'>
+                    {error}
+                </p>
+            )}
+        </main>
     );
 }

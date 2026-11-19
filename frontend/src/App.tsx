@@ -85,18 +85,38 @@ function App() {
         setToken(null);
         setUser(null);
         setProfile(null);
-        setCoachId("");
+        setCoachId('');
     }
 
     if (token && user) {
         return (
-            <main>
-                <h1>ChallengeU Booking</h1>
-                <p>Logged in as: {user.role}</p>
+            <main className='app-layout'>
+                <header className='app-header'>
+                    <div className='app-brand'>
+                        <h1>ChallengeU Booking</h1>
+                        <p>Coaching & scheduling platform</p>
+                    </div>
 
-                <button onClick={handleLogout}>Logout</button>
+                    <div className='app-header-actions'>
+                        <span className='role-badge'>
+                            {user.role === 'ADMIN'
+                                ? 'Enrollment'
+                                : user.role === 'STUDENT'
+                                  ? 'Student'
+                                  : 'Coach'}
+                        </span>
 
-                {user?.role === 'STUDENT' &&
+                        <button
+                            type='button'
+                            className='logout-button'
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </header>
+
+                {user.role === 'STUDENT' &&
                     (coachId ? (
                         <StudentDashboard
                             token={token}
@@ -106,7 +126,9 @@ function App() {
                     ) : (
                         <p>No active coaches available.</p>
                     ))}
+
                 {user.role === 'COACH' && <CoachDashboard token={token} />}
+
                 {user.role === 'ADMIN' && <AdminDashboard token={token} />}
             </main>
         );
